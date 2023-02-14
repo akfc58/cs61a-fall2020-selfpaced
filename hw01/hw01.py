@@ -56,7 +56,6 @@ def largest_factor(n):
             large_number = i
     return large_number
 
-largest_factor(15)
 
 def if_function(condition, true_result, false_result):
     """Return true_result if condition is a true value, and
@@ -100,13 +99,14 @@ def with_if_function():
     return if_function(cond(), true_func(), false_func())
 
 def cond():
-    "*** YOUR CODE HERE ***"
+    return False
+   
 
 def true_func():
-    "*** YOUR CODE HERE ***"
+    print(42)
 
 def false_func():
-    "*** YOUR CODE HERE ***"
+    print(47)
 
 
 def hailstone(n):
@@ -125,4 +125,16 @@ def hailstone(n):
     7
     """
     "*** YOUR CODE HERE ***"
+    counter = 1
+    print(n)
+    while n > 1:
+        if n % 2 == 0:
+            n = int(n / 2)
+        else:
+            n = n * 3 + 1
+        counter = counter + 1
+        print(n)
+    
+    return counter
+hailstone(100)
 
