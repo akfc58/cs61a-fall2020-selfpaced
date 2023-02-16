@@ -1,5 +1,6 @@
-
-def divide_exact(n, d):
-    return floordiv(n, d), mod(n, d)
-
-divide_exact(3, 2)
+x = 2
+def f(x):
+    print (x)
+    x = 3
+    print (x)
+f(x)
