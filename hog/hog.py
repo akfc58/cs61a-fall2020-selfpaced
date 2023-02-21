@@ -23,6 +23,25 @@ def roll_dice(num_rolls, dice=six_sided):
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    n = 1
+    sum = 0
+    pig_out = False
+    while n <= num_rolls:
+        this_turn_dice = dice()
+        print("DEBUG: this turn dice is :", this_turn_dice)
+        print("DEBUG: this turn n is :", n)
+        if this_turn_dice == 1:
+            sum = sum + this_turn_dice
+            pig_out = True
+        else:
+            sum = sum + this_turn_dice
+
+
+        n = n + 1
+    if pig_out:
+        return 1
+    else:
+        return sum
     # END PROBLEM 1
 
 
