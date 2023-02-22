@@ -28,8 +28,8 @@ def roll_dice(num_rolls, dice=six_sided):
     pig_out = False
     while n <= num_rolls:
         this_turn_dice = dice()
-        print("DEBUG: this turn dice is :", this_turn_dice)
-        print("DEBUG: this turn n is :", n)
+        #print("DEBUG: this turn dice is :", this_turn_dice)
+        #print("DEBUG: this turn n is :", n)
         if this_turn_dice == 1:
             sum = sum + this_turn_dice
             pig_out = True
@@ -55,7 +55,7 @@ def free_bacon(score):
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
     pi = pi // pow(10, 100 - score)
-    print("DEBUG: trimed pi is :", pi)
+    #print("DEBUG: trimed pi is :", pi)
     # END PROBLEM 2
 
     return pi % 10 + 3
@@ -103,13 +103,13 @@ def swine_align(player_score, opponent_score):
     # BEGIN PROBLEM 4a
     "*** YOUR CODE HERE ***"
     if (player_score == 0) or (opponent_score == 0):
-        print("DEBUG: someone's score is 0")
+        #print("DEBUG: someone's score is 0")
         return False
     elif Gcd(player_score, opponent_score) >= 10 : 
-        print("DEBUG: gcd bigger than 10")
+        #print("DEBUG: gcd bigger than 10")
         return True
     else:
-        print("DEBUG: gcd isn't bigger than 10")
+        #print("DEBUG: gcd isn't bigger than 10")
         return False
     # END PROBLEM 4a
 
@@ -143,6 +143,11 @@ def pig_pass(player_score, opponent_score):
     """
     # BEGIN PROBLEM 4b
     "*** YOUR CODE HERE ***"
+    score_diff = player_score - opponent_score
+    if score_diff >= 0 or score_diff <= -3:
+        return False
+    else:
+        return True
     # END PROBLEM 4b
 
 
@@ -182,6 +187,27 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    round = 1 
+    def single_turn(my_strategy, my_score, other_score):
+        my_rulls = my_strategy(my_score, other_score)
+        return take_turn(my_rulls,other_score,dice)
+
+    while (score0 < goal) and (score1 < goal):
+        print("DEBUG: in round",round, "score0 and score1 is ", score0, score1)
+        if who == 0:
+            score0 += single_turn(strategy0, score0, score1)
+            while extra_turn(score0, score1) and (score0 < goal):
+                score0 += single_turn(strategy0, score0, score1)
+                print("DEBUG: round is ", round, "score0 is ", score0)
+        else:
+            score1 += single_turn(strategy1, score1, score0)
+            print("DEBUG: round is ", round, "score1 is ", score1)
+            while extra_turn(score1, score0) and (score1 < goal):
+                score1 += single_turn(strategy1, score1, score0)
+                #print("DEBUG: round is ", round, "score1 is ", score1)
+        who = other(who)
+        round += 1
+    #return score0, score1
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
