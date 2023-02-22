@@ -35,8 +35,6 @@ def roll_dice(num_rolls, dice=six_sided):
             pig_out = True
         else:
             sum = sum + this_turn_dice
-
-
         n = n + 1
     if pig_out:
         return 1
@@ -56,6 +54,8 @@ def free_bacon(score):
     # Trim pi to only (score + 1) digit(s)
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    pi = pi // pow(10, 100 - score)
+    print("DEBUG: trimed pi is :", pi)
     # END PROBLEM 2
 
     return pi % 10 + 3
@@ -75,6 +75,10 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     assert opponent_score < 100, 'The game should be over.'
     # BEGIN PROBLEM 3
+    if num_rolls == 0:
+        return free_bacon(opponent_score)
+    else:
+        return roll_dice(num_rolls, dice)
     "*** YOUR CODE HERE ***"
     # END PROBLEM 3
 
@@ -98,8 +102,27 @@ def swine_align(player_score, opponent_score):
     """
     # BEGIN PROBLEM 4a
     "*** YOUR CODE HERE ***"
+    if (player_score == 0) or (opponent_score == 0):
+        print("DEBUG: someone's score is 0")
+        return False
+    elif Gcd(player_score, opponent_score) >= 10 : 
+        print("DEBUG: gcd bigger than 10")
+        return True
+    else:
+        print("DEBUG: gcd isn't bigger than 10")
+        return False
     # END PROBLEM 4a
 
+def Gcd(x, y):
+    assert x > 0 and y > 0, "GCD input wrong, should be positive"
+    if x <= y:
+        smaller = x
+    else:
+        smaller = y
+    for i in range(1, smaller + 1):
+        if (x % i == 0) and (y % i == 0):
+            res = i
+    return res
 
 def pig_pass(player_score, opponent_score):
     """Return whether the player gets an extra turn due to Pig Pass.
