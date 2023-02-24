@@ -193,26 +193,26 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
         return take_turn(my_rulls,other_score,dice)
 
     while (score0 < goal) and (score1 < goal):
-        print("DEBUG: in round",round, "score0 and score1 is ", score0, score1)
         if who == 0:
             score0 += single_turn(strategy0, score0, score1)
+            say = say(score0, score1)
             while extra_turn(score0, score1) and (score0 < goal):
                 score0 += single_turn(strategy0, score0, score1)
-                print("DEBUG: round is ", round, "score0 is ", score0)
+                say = say(score0, score1)
+                #print("DEBUG: round is ", round, "score0 is ", score0)
         else:
             score1 += single_turn(strategy1, score1, score0)
-            print("DEBUG: round is ", round, "score1 is ", score1)
+            #print("DEBUG: round is ", round, "score1 is ", score1)
+            say = say(score0, score1)
             while extra_turn(score1, score0) and (score1 < goal):
                 score1 += single_turn(strategy1, score1, score0)
+                say = say(score0, score1)
+                #print("DEBUG: round is ", round, "score0 is ", score0)
                 #print("DEBUG: round is ", round, "score1 is ", score1)
+        print("DEBUG: in the end of round",round, "score0 and score1 are ", score0, score1)
         who = other(who)
         round += 1
-    #return score0, score1
-    # END PROBLEM 5
-    # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
-    # BEGIN PROBLEM 6
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 6
+
     return score0, score1
 
 
