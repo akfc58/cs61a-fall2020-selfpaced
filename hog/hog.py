@@ -209,7 +209,7 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
                 say = say(score0, score1)
                 #print("DEBUG: round is ", round, "score0 is ", score0)
                 #print("DEBUG: round is ", round, "score1 is ", score1)
-        print("DEBUG: in the end of round",round, "score0 and score1 are ", score0, score1)
+        #print("DEBUG: in the end of round",round, "score0 and score1 are ", score0, score1)
         who = other(who)
         round += 1
 
@@ -353,6 +353,12 @@ def make_averaged(original_function, trials_count=1000):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    def averaged_func(*args):
+        total = 0
+        for k in range(1, trials_count+1):
+            total += original_function(*args)
+        return total / trials_count
+    return averaged_func
     # END PROBLEM 8
 
 
@@ -367,6 +373,16 @@ def max_scoring_num_rolls(dice=six_sided, trials_count=1000):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    best_number = 0
+    best_result = 0 
+    for number_of_dice in range(1, 11):
+
+        averaged_roll_dice = make_averaged(roll_dice, trials_count)  # pass the function roll_dice in, not call it.
+        this_turn_result = averaged_roll_dice(number_of_dice, dice)  # then call the function make_averaged() returned (which is averaged_roll_dice) on number_of_dice and dice
+        if this_turn_result > best_result:
+            best_number = number_of_dice
+            best_result = this_turn_result
+    return best_number
     # END PROBLEM 9
 
 
@@ -395,16 +411,16 @@ def run_experiments():
         six_sided_max = max_scoring_num_rolls(six_sided)
         print('Max scoring num rolls for six-sided dice:', six_sided_max)
 
-    if False:  # Change to True to test always_roll(8)
+    if True:  # Change to True to test always_roll(8)
         print('always_roll(8) win rate:', average_win_rate(always_roll(8)))
 
-    if False:  # Change to True to test bacon_strategy
+    if True:  # Change to True to test bacon_strategy
         print('bacon_strategy win rate:', average_win_rate(bacon_strategy))
 
-    if False:  # Change to True to test extra_turn_strategy
+    if True:  # Change to True to test extra_turn_strategy
         print('extra_turn_strategy win rate:', average_win_rate(extra_turn_strategy))
 
-    if False:  # Change to True to test final_strategy
+    if True:  # Change to True to test final_strategy
         print('final_strategy win rate:', average_win_rate(final_strategy))
 
     "*** You may add additional experiments as you wish ***"
@@ -416,7 +432,11 @@ def bacon_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     rolls NUM_ROLLS otherwise.
     """
     # BEGIN PROBLEM 10
-    return 6  # Replace this statement
+    if free_bacon(opponent_score) >= cutoff:
+        print("DEBUG: using bacon strategy")
+        return 0
+    else:
+        return num_rolls
     # END PROBLEM 10
 
 
@@ -426,7 +446,12 @@ def extra_turn_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     Otherwise, it rolls NUM_ROLLS.
     """
     # BEGIN PROBLEM 11
-    return 6  # Replace this statement
+    score_update = free_bacon(opponent_score) + score
+    print("DEBUG: score_update is", score_update)
+    if extra_turn(score_update, opponent_score):
+        return 0
+    else:
+        return bacon_strategy(score, opponent_score, cutoff, num_rolls)
     # END PROBLEM 11
 
 
@@ -436,7 +461,7 @@ def final_strategy(score, opponent_score):
     *** YOUR DESCRIPTION HERE ***
     """
     # BEGIN PROBLEM 12
-    return 6  # Replace this statement
+    return  extra_turn_strategy(score, opponent_score, cutoff=8, num_rolls=6) # Replace this statement
     # END PROBLEM 12
 
 ##########################
