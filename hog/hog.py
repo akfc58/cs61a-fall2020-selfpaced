@@ -296,6 +296,23 @@ def announce_highest(who, last_score=0, running_high=0):
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
+    def say(score0, score1):
+        # don't know why player0 and player1' scores won't be mixed together. Is it because of different environment??
+        if who == 0:
+            diff0 = score0 - last_score
+            if diff0 > running_high:
+                print(diff0, "point(s)!", "The most yet for Player", who)
+                return announce_highest(who, score0, diff0)
+            else:
+                return announce_highest(who, score0, running_high)
+        else:
+            diff1 = score1 - last_score
+            if diff1 > running_high:
+                print(diff1, "point(s)!", "The most yet for Player", who)
+                return announce_highest(who, score1, diff1)
+            else:
+                return announce_highest(who, score1, running_high) 
+    return say
     # END PROBLEM 7
 
 
