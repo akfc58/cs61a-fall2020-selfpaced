@@ -17,6 +17,12 @@ def choose(paragraphs, select, k):
     """
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    new_para = []
+    for each in paragraphs:
+        if select(each):
+            new_para += [each]
+    return new_para[k] if k < len(new_para) else ''
+
     # END PROBLEM 1
 
 
@@ -33,6 +39,14 @@ def about(topic):
     assert all([lower(x) == x for x in topic]), 'topics should be lowercase.'
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    def choose_about(para):
+        para = split(lower(remove_punctuation(para)))
+        print("DEBUG:", para)
+        for each in topic:
+            if each in para:
+                return True
+        return False
+    return choose_about
     # END PROBLEM 2
 
 
@@ -57,6 +71,15 @@ def accuracy(typed, reference):
     reference_words = split(reference)
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    if len(typed_words) == 0:
+        return 0.0
+    else:
+        len_of_comparable_part = min(len(typed_words), len(reference_words))
+        total_correct = 0
+        for each_index in range(0, len_of_comparable_part):
+            if typed_words[each_index] == reference_words[each_index]:
+                total_correct += 1
+        return total_correct / len(typed_words) * 100
     # END PROBLEM 3
 
 
@@ -65,6 +88,11 @@ def wpm(typed, elapsed):
     assert elapsed > 0, 'Elapsed time must be positive'
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    count = 0
+    for each in typed:
+       count += 1 
+    average_word = count / 5
+    return average_word / elapsed * 60
     # END PROBLEM 4
 
 
