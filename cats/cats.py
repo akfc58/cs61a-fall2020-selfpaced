@@ -41,7 +41,7 @@ def about(topic):
     "*** YOUR CODE HERE ***"
     def choose_about(para):
         para = split(lower(remove_punctuation(para)))
-        print("DEBUG:", para)
+        # print("DEBUG:", para)
         for each in topic:
             if each in para:
                 return True
@@ -103,6 +103,16 @@ def autocorrect(user_word, valid_words, diff_function, limit):
     """
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    if user_word in valid_words:
+        return user_word
+    possible_word = min(valid_words, key=lambda x: diff_function(user_word, x, limit))
+    if diff_function(possible_word, user_word, limit) > limit:
+        return user_word
+    else:
+        return possible_word
+    
+
+
     # END PROBLEM 5
 
 
@@ -112,32 +122,40 @@ def shifty_shifts(start, goal, limit):
     their lengths.
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    #assert False, 'Remove this line'
+    def helper(n):
+        if (n > limit) and start and goal and (start[0] != goal[0]):
+            return n
+        if start and goal:
+            if start[0] != goal[0]:
+                n += 1
+                return 1 + shifty_shifts(start[1:], goal[1:], limit-1)
+            else:
+                n += 1
+                return shifty_shifts(start[1:], goal[1:], limit)
+        else:
+            return max(len(start),len(goal))
+        
+    return helper(1)
     # END PROBLEM 6
-
 
 def pawssible_patches(start, goal, limit):
     """A diff function that computes the edit distance from START to GOAL."""
-    assert False, 'Remove this line'
-
-    if ______________: # Fill in the condition
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
-    elif ___________: # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
+    if limit < 0:
+        return 0
+    if not (start and goal):
+        return max(len(start),len(goal))
+    elif start[0] == goal[0]:
+        return 0 + pawssible_patches(start[1:], goal[1:], limit)
+    elif start[-1] == goal[-1]:
+        return 0 + pawssible_patches(start[:-1], goal[:-1], limit) 
     else:
-        add_diff = ... # Fill in these lines
-        remove_diff = ...
-        substitute_diff = ...
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
+        substitution_diff = pawssible_patches(start[1:], goal[1:], limit - 1)
+        remove_diff = pawssible_patches(start[1:], goal, limit - 1)
+        add_diff = pawssible_patches(start, goal[1:], limit - 1)
+        print("DEBUG:",substitution_diff, remove_diff, add_diff) 
+        return 1 + min(remove_diff, add_diff, substitution_diff)
+        
 
 def final_diff(start, goal, limit):
     """A diff function. If you implement this function, it will be used."""
@@ -153,6 +171,17 @@ def report_progress(typed, prompt, user_id, send):
     """Send a report of your id and progress so far to the multiplayer server."""
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    flag = True
+    count = 0
+    for index in range(0, len(typed)):
+        if typed[index] != prompt[index]:
+            flag = False
+        if flag == True:
+            count += 1
+    ratio = count / len(prompt)
+    send({'id': user_id, "progress":ratio})
+    return ratio
+
     # END PROBLEM 8
 
 
@@ -179,6 +208,16 @@ def time_per_word(times_per_player, words):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    each_player_period = []
+    times = []
+    for each_players_time in times_per_player:
+        #print("DEBUG:each_palyer_time is ", each_players_time)
+        for timestamp_index in range(1, len(each_players_time)):
+            each_player_period += [each_players_time[timestamp_index] - each_players_time[timestamp_index - 1]]
+            #print("DEBUG: each player period is ", each_player_period)
+        times += [each_player_period]
+        each_player_period = []
+    return game(words, times)
     # END PROBLEM 9
 
 
@@ -194,6 +233,27 @@ def fastest_words(game):
     word_indices = range(len(all_words(game)))    # contains an *index* for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
+    fastest_word_list = []
+    final_list = []
+    for i in player_indices:
+        final_list += [[]] # make a list of empty list representing each player
+    for word_index in word_indices:
+        each_word = word_at(game, word_index)
+        fastest = time(game, 0, word_index)
+        fastest_player = 0
+        for player_index in player_indices:
+            time_of_each_player = time(game, player_index, word_index)
+            if time_of_each_player < fastest:
+                #remember player_index and the word
+                fastest = time_of_each_player
+                fastest_player = player_index
+        print("DEBUG:", each_word, fastest_player, final_list[fastest_player])
+        final_list[fastest_player].append(each_word)
+        #fastest_word_list += [[each_word, fastest_player]]
+    #print("DEBUG:perparing the return value", fastest_word_list)
+    print("DEBUG:the return value", final_list)
+    return final_list
+    
     # END PROBLEM 10
 
 
