@@ -208,15 +208,11 @@ def time_per_word(times_per_player, words):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
-    each_player_period = []
-    times = []
-    for each_players_time in times_per_player:
-        #print("DEBUG:each_palyer_time is ", each_players_time)
-        for timestamp_index in range(1, len(each_players_time)):
-            each_player_period += [each_players_time[timestamp_index] - each_players_time[timestamp_index - 1]]
-            #print("DEBUG: each player period is ", each_player_period)
-        times += [each_player_period]
-        each_player_period = []
+    
+    t = times_per_player
+    times = [[t[i][k+1] - t[i][k] for k in range(len(words))] for i in range(len(t))]
+    print("DEBUG:listcomperhension is", times)
+    
     return game(words, times)
     # END PROBLEM 9
 
@@ -233,25 +229,14 @@ def fastest_words(game):
     word_indices = range(len(all_words(game)))    # contains an *index* for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
-    fastest_word_list = []
-    final_list = []
-    for i in player_indices:
-        final_list += [[]] # make a list of empty list representing each player
+    final_list = [[] for _ in player_indices]
     for word_index in word_indices:
-        each_word = word_at(game, word_index)
-        fastest = time(game, 0, word_index)
-        fastest_player = 0
-        for player_index in player_indices:
-            time_of_each_player = time(game, player_index, word_index)
-            if time_of_each_player < fastest:
-                #remember player_index and the word
-                fastest = time_of_each_player
-                fastest_player = player_index
-        print("DEBUG:", each_word, fastest_player, final_list[fastest_player])
-        final_list[fastest_player].append(each_word)
-        #fastest_word_list += [[each_word, fastest_player]]
-    #print("DEBUG:perparing the return value", fastest_word_list)
-    print("DEBUG:the return value", final_list)
+        word = word_at(game, word_index)
+        lst = []
+        for player_id in player_indices:
+            lst.append(time(game, player_id, word_index))
+        player_id_index = lst.index(min(lst))
+        final_list[player_id_index].append(word)
     return final_list
     
     # END PROBLEM 10
