@@ -436,7 +436,6 @@ def make_let_frame(bindings, env):
     # BEGIN PROBLEM 14
     "*** YOUR CODE HERE ***"
     while bindings is not nil:
-        print("DEBUG:", bindings)
         validate_form(bindings.first, 2, 2)
         names = Pair(bindings.first.first, names)
         values = Pair(scheme_eval(bindings.first.rest.first, env), values)

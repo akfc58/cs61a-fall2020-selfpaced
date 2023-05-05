@@ -7,7 +7,9 @@
 (define (cddr x) (cdr (cdr x)))
 
 ; Some utility functions that you may find useful to implement
-(define (zip pairs) 'replace-this-line)
+(define (zip pairs) 
+  (list (map car pairs) (map cadr pairs))
+)
 
 ; ; Problem 15
 ; ; Returns a list of two-element lists
@@ -60,54 +62,50 @@
       (cons (car s) (car (nondecreaselist (cdr s))))
       (cdr (nondecreaselist (cdr s)))))))
 
-(define s (list 1 2 3 1 2 2 1))
 
-(nondecreaselist s)
 
-; END PROBLEM 17
-; ; Problem EC
-; ; Returns a function that checks if an expression is the special form FORM
+;; Problem EC
+;; Returns a function that checks if an expression is the special form FORM
 (define (check-special form)
   (lambda (expr) (equal? form (car expr))))
 
 (define lambda? (check-special 'lambda))
-
 (define define? (check-special 'define))
-
 (define quoted? (check-special 'quote))
+(define let?    (check-special 'let))
 
-(define let? (check-special 'let))
-
-; ; Converts all let special forms in EXPR into equivalent forms using lambda
+;; Converts all let special forms in EXPR into equivalent forms using lambda
 (define (let-to-lambda expr)
-  (cond 
-    ((atom? expr)
-     ; BEGIN PROBLEM EC
-     'replace-this-line
-     ; END PROBLEM EC
-    )
-    ((quoted? expr)
-     ; BEGIN PROBLEM EC
-     'replace-this-line
-     ; END PROBLEM EC
-    )
-    ((or (lambda? expr) (define? expr))
-     (let ((form (car expr))
-           (params (cadr expr))
-           (body (cddr expr)))
-       ; BEGIN PROBLEM EC
-       'replace-this-line
-       ; END PROBLEM EC
-     ))
-    ((let? expr)
-     (let ((values (cadr expr))
-           (body (cddr expr)))
-       ; BEGIN PROBLEM EC
-       'replace-this-line
-       ; END PROBLEM EC
-     ))
-    (else
-     ; BEGIN PROBLEM EC
-     'replace-this-line
-     ; END PROBLEM EC
-    )))
+  (cond ((atom? expr)
+         ; BEGIN PROBLEM EC
+         expr
+         ; END PROBLEM EC
+         )
+        ((quoted? expr)
+         ; BEGIN PROBLEM EC
+         expr
+         ; END PROBLEM EC
+         )
+        ((or (lambda? expr)
+             (define? expr))
+         (let ((form   (car expr))
+               (params (cadr expr))
+               (body   (cddr expr)))
+           ; BEGIN PROBLEM EC
+          (append (list form params) (map let-to-lambda body)) 
+           ; END PROBLEM EC
+           ))
+        ((let? expr)
+         (let ((values (cadr expr))
+               (body   (cddr expr)))
+           ; BEGIN PROBLEM EC
+           (define params (car (zip values)))
+           (define call_on (map let-to-lambda (cadr (zip values))))
+           (cons (append (list 'lambda params) (map let-to-lambda body)) call_on)
+           ; END PROBLEM EC
+           ))
+        (else
+         ; BEGIN PROBLEM EC
+         (map let-to-lambda expr)
+         ; END PROBLEM EC
+         )))
